@@ -26,6 +26,18 @@
             "migrations/.gitignore"
         ]
     },
+    "ecotone/symfony-bundle": {
+        "version": "1.254.1"
+    },
+    "prooph/pdo-event-store": {
+        "version": "1.16",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.15",
+            "ref": "020f87be92de58907f180d552e1a1b0d8c34cdd1"
+        }
+    },
     "symfony/console": {
         "version": "7.2",
         "recipe": {
