@@ -32,7 +32,8 @@ class CartItemsReadModel implements \JsonSerializable
         foreach ($events as $event) {
             match ($event->getEventName()) {
                 "App\Event\ItemAdded" => $this->applyItemAdded($event->getPayload()),
-                "App\Event\CartCreated" => $this->applyCartCreated($event->getPayload())
+                "App\Event\CartCreated" => $this->applyCartCreated($event->getPayload()),
+                default => null
             };
         }
         return $this;
