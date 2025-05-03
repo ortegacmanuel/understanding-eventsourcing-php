@@ -9,3 +9,9 @@ cart_items:
         path: ../src/CartItems/
         namespace: App\CartItems
     type: attribute
+
+remove_item:
+    resource:
+        path: ../src/RemoveItem/
+        namespace: App\RemoveItem
+    type: attribute

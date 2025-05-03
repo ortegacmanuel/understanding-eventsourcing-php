@@ -4,8 +4,9 @@ namespace App\Domain\Cart;
 
 use App\Event\CartCreated;
 use App\Event\ItemAdded;
-
+use App\Event\ItemRemoved;
 use App\Domain\Cart\Command\AddItem;
+use App\Domain\Cart\Command\RemoveItem;
 
 use Ecotone\Modelling\Attribute\Aggregate;
 use Ecotone\Modelling\Attribute\CommandHandler;
@@ -58,6 +59,18 @@ class Cart
         ];
     }
 
+    #[CommandHandler]
+    public function removeItem(RemoveItem $command): array
+    {
+        if (!in_array($command->itemId, $this->items)) {
+            throw new \InvalidArgumentException("Item {$command->itemId} not in the Cart");
+        }
+        
+        return [
+            new ItemRemoved($command->cartId, $command->itemId),
+        ];
+    }
+
     #[EventSourcingHandler]
     public function onCartCreated(CartCreated $event): void
     {
@@ -69,5 +82,11 @@ class Cart
     public function onItemAdded(ItemAdded $event): void
     {
         $this->items[] = $event->itemId;
+    }
+
+    #[EventSourcingHandler]
+    public function onItemRemoved(ItemRemoved $event): void
+    {
+        $this->items = array_diff($this->items, [$event->itemId]);
     }
 }
