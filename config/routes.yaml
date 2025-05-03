@@ -1,5 +1,11 @@
-controllers:
+add_item:
     resource:
         path: ../src/AddItem/
         namespace: App\AddItem
+    type: attribute
+
+cart_items:
+    resource:
+        path: ../src/CartItems/
+        namespace: App\CartItems
     type: attribute
