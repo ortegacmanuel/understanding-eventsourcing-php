@@ -15,3 +15,9 @@ remove_item:
         path: ../src/RemoveItem/
         namespace: App\RemoveItem
     type: attribute
+
+clear_cart:
+    resource:
+        path: ../src/ClearCart/
+        namespace: App\ClearCart
+    type: attribute

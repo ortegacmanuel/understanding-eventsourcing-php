@@ -5,8 +5,11 @@ namespace App\Domain\Cart;
 use App\Event\CartCreated;
 use App\Event\ItemAdded;
 use App\Event\ItemRemoved;
+use App\Event\CartCleared;
+
 use App\Domain\Cart\Command\AddItem;
 use App\Domain\Cart\Command\RemoveItem;
+use App\Domain\Cart\Command\ClearCart;
 
 use Ecotone\Modelling\Attribute\Aggregate;
 use Ecotone\Modelling\Attribute\CommandHandler;
@@ -71,6 +74,14 @@ class Cart
         ];
     }
 
+    #[CommandHandler]
+    public function clearCart(ClearCart $command): array
+    {
+        return [
+            new CartCleared($command->cartId),
+        ];
+    }
+
     #[EventSourcingHandler]
     public function onCartCreated(CartCreated $event): void
     {
@@ -88,5 +99,11 @@ class Cart
     public function onItemRemoved(ItemRemoved $event): void
     {
         $this->items = array_diff($this->items, [$event->itemId]);
+    }
+
+    #[EventSourcingHandler]
+    public function onCartCleared(CartCleared $event): void
+    {
+        $this->items = [];
     }
 }
