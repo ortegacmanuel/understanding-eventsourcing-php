@@ -5,6 +5,7 @@ namespace App\CartItems;
 use App\Event\CartCreated;
 use App\Event\ItemAdded;
 use App\Event\ItemRemoved;
+use App\Event\CartCleared;
 
 use App\CartItems\CartItem;
 
@@ -35,6 +36,7 @@ class CartItemsReadModel implements \JsonSerializable
                 "App\Event\ItemAdded" => $this->applyItemAdded($event->getPayload()),
                 "App\Event\CartCreated" => $this->applyCartCreated($event->getPayload()),
                 "App\Event\ItemRemoved" => $this->applyItemRemoved($event->getPayload()),
+                "App\Event\CartCleared" => $this->applyCartCleared($event->getPayload()),
                 default => null
             };
         }
@@ -67,6 +69,12 @@ class CartItemsReadModel implements \JsonSerializable
             $this->totalPrice -= $removedItem->price;
         }
         $this->items = array_values(array_filter($this->items, fn (CartItem $item) => $item->itemId != $event->itemId));
+    }
+
+    public function applyCartCleared(CartCleared $event): void
+    {
+        $this->items = [];
+        $this->totalPrice = 0.0;
     }
 
     public function getItems(): array

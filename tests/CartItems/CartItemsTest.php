@@ -9,6 +9,7 @@ use App\Domain\Cart\Cart;
 use App\Event\CartCreated;
 use App\Event\ItemAdded;
 use App\Event\ItemRemoved;
+use App\Event\CartCleared;
 
 use App\CartItems\GetCartItemsQuery;
 use App\CartItems\CartItemsReadModel;
@@ -111,5 +112,47 @@ final class CartItemTest extends TestCase
             )
             ->sendQuery(new GetCartItemsQuery($cartId))->jsonSerialize()
         );
-    }    
+    }
+    
+    public function test_clearing_cart()
+    {
+        $cartId = Uuid::uuid4();
+        $productId = Uuid::uuid4();
+        $itemId = Uuid::uuid4();
+        $image = 'https://example.com/image.jpg';
+        $price = 1000;
+        $description = 'Description';
+
+        $this->assertEquals(
+            [
+                'cartId' => $cartId->toString(),
+                'totalPrice' => 0,
+                'items' => []
+            ],
+            EcotoneLite::bootstrapFlowTestingWithEventStore(
+                [Cart::class, UuidConverter::class, CartItemsReadModel::class],
+                [new UuidConverter(), new CartItemsReadModel()],
+                configuration: ServiceConfiguration::createWithDefaults()
+            )
+            ->withEventsFor(
+                $cartId,
+                Cart::class,
+                [
+                    new CartCreated($cartId),
+                    new ItemAdded(
+                        cartId: $cartId,
+                        itemId: $itemId,
+                        productId: $productId,
+                        image: $image,
+                        price: $price,
+                        description: $description
+                    ),
+                    new CartCleared(
+                        cartId: $cartId,
+                    )
+                ]
+            )
+            ->sendQuery(new GetCartItemsQuery($cartId))->jsonSerialize()
+        );
+    }     
 }
