@@ -21,3 +21,9 @@ clear_cart:
         path: ../src/ClearCart/
         namespace: App\ClearCart
     type: attribute
+
+change_inventory:
+    resource:
+        path: ../src/ChangeInventory/
+        namespace: App\ChangeInventory
+    type: attribute
